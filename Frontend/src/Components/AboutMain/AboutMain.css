@@ -1,0 +1,563 @@
+/* =====================================================
+   WRAPPER – white page that scrolls OVER the sticky breadcrumb banner
+===================================================== */
+.about-wrap {
+  --orange: #f26b1d;
+  --orange-soft: #ff8a3d;
+  --navy: #0b1f5c;
+  --ink: #1b2340;
+  --muted: #5a6280;
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+
+  position: relative;
+  z-index: 10;            /* must be ABOVE your sticky breadcrumb banner */
+  min-height: 50vh;
+  background: #ffffff;    /* white theme background that scrolls with the page */
+  font-family: "Poppins", "Nunito", system-ui, sans-serif;
+  color: var(--ink);
+  overflow-x: clip;       /* clips side donuts, keeps the heading card visible on top */
+}
+
+/* =====================================================
+   "ABOUT US" HEADING – centred on the banner / page edge
+===================================================== */
+.about-title {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 30;
+  width: min(560px, 48%);
+  transform: translate(-50%, -50%);   /* top half over banner, bottom half on white page */
+}
+
+.about-title-card {
+  position: relative;
+  overflow: hidden;
+  padding: 20px 24px 17px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #eceef5;
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(11, 31, 92, 0.18);
+}
+
+/* light sweep across the card once it appears */
+.about-title-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(242, 107, 29, 0.18), transparent);
+  transform: skewX(-18deg);
+  animation: cardShine 1.4s ease 1s both;
+}
+
+.about-title-card h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.6vw, 2.2rem);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--navy);
+  perspective: 600px;
+}
+
+.ch {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(70%) rotateX(-80deg);
+  transform-origin: 50% 100%;
+  animation: chIn 0.8s var(--ease) calc(0.35s + var(--i) * 0.06s) forwards;
+}
+
+.about-title-card p {
+  margin: 4px 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--orange);
+  animation: fadeUp 0.8s var(--ease) 1s both;
+}
+
+.about-title-line {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, var(--orange), var(--orange-soft));
+  border-radius: 4px 4px 0 0;
+  animation: lineGrow 0.9s var(--ease) 0.9s forwards;
+}
+
+@keyframes cardShine {
+  from { left: -60%; }
+  to   { left: 130%; }
+}
+@keyframes chIn {
+  to { opacity: 1; transform: none; }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes lineGrow {
+  to { width: 90px; }
+}
+
+/* =====================================================
+   MAIN SECTION
+===================================================== */
+.about-main {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 120px 32px 70px;   /* top space = lower half of the heading card + breathing room */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 56px;
+  align-items: center;
+}
+
+/* drifting blurred colour blobs (parallax with scroll) */
+.about-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 0.25s ease-out;
+}
+.blob-a {
+  width: 320px;
+  height: 320px;
+  right: 6%;
+  top: 14%;
+  background: var(--orange);
+  transform: translateY(calc(var(--py, 0) * 90px));
+}
+.blob-b {
+  width: 260px;
+  height: 260px;
+  left: 18%;
+  bottom: 4%;
+  background: #3b5bdb;
+  transform: translateY(calc(var(--py, 0) * -70px));
+}
+
+/* left donut: rotates + drifts while scrolling (always behind the text / images) */
+.about-float-donut {
+  position: absolute;
+  left: -60px;
+  top: 180px;
+  width: 120px;
+  z-index: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.18));
+  transform: translateY(calc(var(--py, 0) * -70px)) rotate(calc(var(--py, 0) * -260deg));
+  transition: transform 0.25s ease-out;
+}
+
+/* right donut (promo section): constant slow spin
+   – it stays BEHIND the banner cards, never in front of them */
+.about-float-donut.right {
+  left: auto;
+  right: -60px;
+  top: -40px;
+  z-index: 0;            /* promo cards are z-index 1 → they always cover the donut */
+  transform: none;
+  transition: none;
+  animation: donutSpin 24s linear infinite reverse;
+}
+@keyframes donutSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ----- text ----- */
+.about-text {
+  position: relative;
+  z-index: 1;
+  padding-left: 40px;
+}
+
+/* everything except the h2 slides in; h2 uses the word-mask reveal */
+.about-text > :not(h2) {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+.about-text.is-visible > :not(h2) {
+  opacity: 1;
+  transform: none;
+}
+.about-text.is-visible > h3 { transition-delay: 0.3s; }
+.about-text.is-visible > p { transition-delay: 0.4s; }
+.about-text.is-visible > .about-list { transition-delay: 0.5s; }
+.about-text.is-visible > .about-btn { transition-delay: 1s; }
+
+.about-text h2 {
+  margin: 0 0 6px;
+  font-size: clamp(2.1rem, 3.8vw, 3.2rem);
+  line-height: 1.12;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.1em;
+}
+.word {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform 0.9s var(--ease) calc(0.05s + var(--i) * 0.12s);
+}
+.about-text.is-visible .word {
+  transform: none;
+}
+
+.about-brand {
+  margin: 0 0 18px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+.about-text p {
+  margin: 0 0 26px;
+  max-width: 560px;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.about-list {
+  list-style: none;
+  margin: 0 0 34px;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.about-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.about-text.is-visible .about-list li {
+  opacity: 1;
+  transform: none;
+  transition-delay: var(--d);
+}
+
+/* check icon draws itself */
+.about-check {
+  flex: none;
+  color: var(--orange);
+}
+.about-check circle,
+.about-check path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.about-check path {
+  stroke-width: 2.4;
+}
+.about-text.is-visible .chk-circle {
+  animation: draw 0.9s var(--ease) calc(var(--d) + 0.15s) forwards;
+}
+.about-text.is-visible .chk-tick {
+  animation: draw 0.6s var(--ease) calc(var(--d) + 0.6s) forwards;
+}
+.about-list li { --d: 0.35s; }
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* button with shine sweep */
+.about-btn {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  padding: 14px 34px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  color: #fff;
+  background: linear-gradient(135deg, var(--orange), var(--orange-soft));
+  box-shadow: 0 10px 22px rgba(242, 107, 29, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.8s var(--ease);
+}
+.about-btn span { position: relative; z-index: 1; }
+.about-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+}
+.about-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 28px rgba(242, 107, 29, 0.45);
+}
+.about-btn:hover::after { left: 130%; }
+.about-btn:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+}
+
+/* =====================================================
+   GALLERY (right side)
+   2 equal columns · every image 3:2 · right column higher
+   · badge centred between the columns
+===================================================== */
+.about-gallery {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 34px;
+}
+
+.gal-col {
+  display: grid;
+  gap: 26px;
+  align-content: start;
+  will-change: transform;
+}
+.gal-col-1 {
+  padding-top: 30px;                                  /* left column pushed down */
+  transform: translateY(calc(var(--py, 0) * -26px));  /* parallax: opposite directions */
+}
+.gal-col-2 {
+  transform: translateY(calc(var(--py, 0) * 26px));
+}
+
+.gal-img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 16px 34px rgba(11, 31, 92, 0.18);
+  opacity: 0;
+  transition: opacity 0.9s var(--ease), transform 1.2s var(--ease);
+  transition-delay: var(--d);
+}
+.gal-img img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transform: scale(1.3);                      /* zooms out while the image lands */
+  transition: transform 1.5s var(--ease) var(--d);
+}
+
+/* glossy sweep on hover */
+.gal-img::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -90%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+.gal-img:hover::after {
+  left: 140%;
+  transition: left 0.8s ease;
+}
+
+/* each image arrives from a different position */
+.from-left   { transform: translateX(-130px) rotate(-7deg); }
+.from-right  { transform: translateX(130px) rotate(7deg); }
+.from-top    { transform: translateY(-130px) rotate(5deg); }
+.from-bottom { transform: translateY(130px) rotate(-5deg); }
+
+.about-gallery.is-visible .gal-img {
+  opacity: 1;
+  transform: none;
+}
+.about-gallery.is-visible .gal-img img {
+  transform: scale(1);
+}
+.about-gallery.is-visible .gal-img:hover img {
+  transform: scale(1.08);
+  transition: transform 0.7s var(--ease);
+}
+
+/* =====================================================
+   EXPERIENCE BADGE (rotating circle + count-up)
+===================================================== */
+.exp-badge {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 19%;
+  min-width: 96px;
+  aspect-ratio: 1 / 1;
+  z-index: 5;
+  container-type: inline-size;            /* text scales with the circle (cqw) */
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 25%, #ff7a5c, #e8264a 70%);
+  box-shadow: 0 12px 30px rgba(232, 38, 74, 0.45), 0 0 0 4px #fff;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1) 1s;
+}
+.exp-badge.is-visible {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* pulsing halo */
+.exp-badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(232, 38, 74, 0.55);
+  animation: haloPulse 2.6s ease-out 2s infinite;
+  pointer-events: none;
+}
+@keyframes haloPulse {
+  from { transform: scale(1);    opacity: 0.8; }
+  to   { transform: scale(1.55); opacity: 0; }
+}
+
+.exp-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: ringSpin 14s linear infinite;
+}
+.exp-ring text {
+  fill: #fff;
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: 3px;
+}
+@keyframes ringSpin {
+  to { transform: rotate(360deg); }
+}
+
+.exp-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  line-height: 1;
+}
+.exp-number {
+  font-size: 34cqw;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.exp-label {
+  margin-top: 3cqw;
+  font-size: 13cqw;
+  font-weight: 500;
+}
+
+/* =====================================================
+   PROMO BANNERS
+===================================================== */
+.about-promos {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 32px 90px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.promo {
+  position: relative;
+  z-index: 1;            /* always ABOVE the right donut (donut is z-index 0) */
+  display: block;
+  overflow: hidden;
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity 0.9s var(--ease), transform 1s var(--ease), box-shadow 0.3s ease;
+}
+.promo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.6s var(--ease);
+}
+.promo-left  { transform: translateX(-90px) rotate(-2deg); }
+.promo-right { transform: translateX(90px) rotate(2deg); transition-delay: 0.15s; }
+
+.about-promos.is-visible .promo {
+  opacity: 1;
+  transform: none;
+}
+.promo:hover { box-shadow: 0 18px 36px rgba(11, 31, 92, 0.22); }
+.promo:hover img { transform: scale(1.04); }
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 992px) {
+  .about-main {
+    grid-template-columns: 1fr;
+    gap: 48px;
+    padding-top: 120px;
+  }
+  .about-text { padding-left: 0; }
+  .about-float-donut { width: 110px; left: -50px; top: 110px; }
+}
+
+@media (max-width: 640px) {
+  .about-main { padding: 110px 18px 40px; }
+  .about-gallery { column-gap: 14px; }
+  .gal-col { gap: 14px; }
+  .gal-col-1 { padding-top: 18px; }
+  .about-promos { grid-template-columns: 1fr; padding: 10px 18px 60px; }
+  .about-float-donut.right { display: none; }
+  .about-blob { display: none; }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .about-wrap *,
+  .about-wrap *::before,
+  .about-wrap *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+  .ch, .about-text > :not(h2), .about-list li, .gal-img, .promo {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .word { transform: none !important; }
+  .gal-img img { transform: none !important; }
+  .about-check circle, .about-check path { stroke-dashoffset: 0 !important; }
+  .about-title-line { width: 90px; }
+  .exp-badge { transform: translate(-50%, -50%) scale(1) !important; }
+}

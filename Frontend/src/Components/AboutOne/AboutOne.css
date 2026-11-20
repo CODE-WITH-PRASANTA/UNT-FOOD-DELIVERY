@@ -1,0 +1,353 @@
+/* =====================================================
+   ABOUT ONE – "Service shows good taste."
+   Container is split 50% / 50%
+     left  50% → 2 x 2 grid (heading + 3 cards, compact)
+     right 50% → tall girl image
+===================================================== */
+.about-one {
+  --orange: #f26b1d;
+  --orange-soft: #ff8a3d;
+  --navy: #0b1f5c;
+  --ink: #1b2340;
+  --muted: #5a6280;
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+
+  --visual-h: clamp(560px, 52vw, 800px);   /* ← girl image height (increase / decrease here) */
+
+  position: relative;
+  z-index: 10;                  /* same layer as AboutMain → scrolls over the sticky banner */
+  padding: 90px 32px 90px;
+  background: #f3f4f9;
+  font-family: "Poppins", "Nunito", system-ui, sans-serif;
+  color: var(--ink);
+  overflow-x: clip;
+}
+
+/* soft shadow fading in from the section above */
+.about-one::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(11, 31, 92, 0.09), transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ----- decorative background ----- */
+.about-one-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
+  transition: transform 0.25s ease-out;
+}
+.blob-1 {
+  width: 280px;
+  height: 280px;
+  left: 18%;
+  top: 8%;
+  background: var(--orange);
+  transform: translateY(calc(var(--py, 0) * 80px));
+}
+.blob-2 {
+  width: 260px;
+  height: 260px;
+  right: 8%;
+  bottom: 6%;
+  background: #e8264a;
+  transform: translateY(calc(var(--py, 0) * -70px));
+}
+
+.about-one-donut-left {
+  position: absolute;
+  left: -60px;
+  top: 80px;
+  width: 120px;
+  z-index: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.18));
+  transform: translateY(calc(var(--py, 0) * -60px)) rotate(calc(var(--py, 0) * 260deg));
+  transition: transform 0.25s ease-out;
+}
+.about-one-donut-right {
+  position: absolute;
+  right: -50px;
+  bottom: -2px;
+  width: 120px;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.2));
+  animation: aboutOneSpin 26s linear infinite;
+}
+@keyframes aboutOneSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* =====================================================
+   CONTAINER  →  exactly 50% | 50%
+===================================================== */
+.about-one-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;        /* 50 / 50 */
+  gap: 40px;
+  align-items: center;
+}
+
+/* =====================================================
+   LEFT 50%  →  2 x 2 compact grid
+   [ heading ][ card 1 ]
+   [ card 2  ][ card 3 ]
+===================================================== */
+.about-one-left {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "title c1"
+    "c2    c3";
+  gap: 18px;
+  align-items: stretch;
+}
+
+/* ----- grid 1: heading ----- */
+.about-one-title {
+  grid-area: title;
+  align-self: center;
+  padding: 0 4px 0 28px;
+}
+.about-one-title h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.7rem);
+  line-height: 1.18;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.about-one-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.12em;
+}
+.about-one-word {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform 0.9s var(--ease) calc(0.05s + var(--i) * 0.14s);
+}
+.about-one-word.is-accent {
+  color: var(--orange);
+}
+.about-one-container.is-visible .about-one-word {
+  transform: none;
+}
+
+.about-one-title-line {
+  display: block;
+  height: 4px;
+  width: 0;
+  margin-top: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-soft));
+  transition: width 1s var(--ease) 0.7s;
+}
+.about-one-container.is-visible .about-one-title-line {
+  width: 80px;
+}
+
+/* ----- grids 2–4: compact cards ----- */
+.about-one-card {
+  position: relative;
+  overflow: hidden;
+  padding: 20px 20px 24px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(11, 31, 92, 0.06);
+  text-align: center;
+  opacity: 0;
+  transition:
+    opacity 0.9s var(--ease) var(--d),
+    transform 1s var(--ease) var(--d),
+    box-shadow 0.35s ease;
+}
+.card-delivery { grid-area: c1; transform: translateY(-60px); }
+.card-fast     { grid-area: c2; transform: translateX(-60px) translateY(30px); }
+.card-discount { grid-area: c3; transform: translateY(60px); }
+
+.about-one-container.is-visible .about-one-card {
+  opacity: 1;
+  transform: none;
+}
+
+/* hover: lift + orange bottom bar + mouse spotlight */
+.about-one-container.is-visible .about-one-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 22px 40px rgba(242, 107, 29, 0.22);
+  transition-delay: 0s;
+}
+.about-one-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    200px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(242, 107, 29, 0.14),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.about-one-card:hover::before {
+  opacity: 1;
+}
+.about-one-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-soft));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease);
+}
+.about-one-card:hover::after {
+  transform: scaleX(1);
+}
+
+/* icon box */
+.about-one-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 10px;
+  border-radius: 10px;
+  background: #f5f5f7;
+  color: var(--orange);
+  transition: background 0.35s ease, color 0.35s ease;
+}
+.about-one-card:hover .about-one-icon {
+  background: linear-gradient(135deg, var(--orange), var(--orange-soft));
+  color: #fff;
+  animation: aboutOneWiggle 0.7s ease;
+}
+@keyframes aboutOneWiggle {
+  0%   { transform: rotate(0); }
+  25%  { transform: rotate(-10deg) scale(1.08); }
+  50%  { transform: rotate(8deg) scale(1.08); }
+  75%  { transform: rotate(-4deg); }
+  100% { transform: rotate(0); }
+}
+
+.about-one-card h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 8px;
+  font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+  font-weight: 700;
+  color: var(--navy);
+  transition: color 0.3s ease;
+}
+.about-one-card:hover h3 {
+  color: var(--orange);
+}
+.about-one-card p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  text-align: left;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* =====================================================
+   RIGHT 50%  →  tall girl image
+===================================================== */
+.about-one-visual {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: var(--visual-h);
+
+
+
+
+}
+.about-one-visual-inner {
+
+  width: 100%;
+  height: 91%;
+  clip-path: inset(0 0 0 0%);                      /* revealed from the right */
+
+}
+.about-one-visual img {
+  display: block;
+  width: 100%;
+  height: 100%;
+ 
+ 
+  
+}
+
+
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 992px) {
+  .about-one-container {
+    grid-template-columns: 1fr;          /* stack: grids first, image below */
+    gap: 36px;
+  }
+  .about-one-visual {
+    height: clamp(420px, 80vw, 640px);
+  }
+  .about-one-title { padding-left: 0; }
+}
+
+@media (max-width: 600px) {
+  .about-one { padding: 70px 18px 70px; }
+  .about-one-left {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "c1"
+      "c2"
+      "c3";
+  }
+  .about-one-donut-right { width: 110px; right: -55px; }
+  .about-one-blob { display: none; }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .about-one *,
+  .about-one *::before,
+  .about-one *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+  .about-one-card { opacity: 1 !important; transform: none !important; }
+  .about-one-word { transform: none !important; }
+  .about-one-visual-inner { clip-path: none !important; }
+  .about-one-visual img { transform: none !important; }
+  .about-one-title-line { width: 80px; }
+}

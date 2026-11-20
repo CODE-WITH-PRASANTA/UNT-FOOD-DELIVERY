@@ -1,0 +1,357 @@
+/* =====================================================
+   ABOUT TWO – "What our clients say"
+   (same colours / fonts / hover style as AboutMain & AboutOne)
+===================================================== */
+.about-two {
+  --orange: #f26b1d;
+  --orange-soft: #ff8a3d;
+  --navy: #0b1f5c;
+  --ink: #1b2340;
+  --muted: #5a6280;
+  --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
+
+  position: relative;
+  z-index: 10;                    /* same layer as the other sections → scrolls over the sticky banner */
+  padding: 110px 32px 110px;
+  background: #ffffff;
+  font-family: "Poppins", "Nunito", system-ui, sans-serif;
+  color: var(--ink);
+  overflow-x: clip;
+}
+
+/* soft shadow fading in from the section above */
+.about-two::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(11, 31, 92, 0.09), transparent);
+  pointer-events: none;
+}
+
+.about-two-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.18;
+  pointer-events: none;
+  transition: transform 0.25s ease-out;
+}
+.blob-a {
+  width: 280px;
+  height: 280px;
+  left: 4%;
+  top: 30%;
+  background: var(--orange);
+  transform: translateY(calc(var(--py, 0) * 80px));
+}
+.blob-b {
+  width: 260px;
+  height: 260px;
+  right: 6%;
+  bottom: 8%;
+  background: #7b61ff;
+  transform: translateY(calc(var(--py, 0) * -70px));
+}
+
+.about-two-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* =====================================================
+   TITLE
+===================================================== */
+.about-two-head {
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.about-two-eyebrow {
+  display: inline-block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.about-two-inner.is-visible .about-two-eyebrow {
+  opacity: 1;
+  transform: none;
+}
+
+.about-two-head h2 {
+  margin: 8px 0 0;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  line-height: 1.15;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.about-two-word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.12em;
+}
+.about-two-word {
+  display: inline-block;
+  transform: translateY(115%);
+  transition: transform 0.9s var(--ease) calc(0.15s + var(--i) * 0.13s);
+}
+.about-two-inner.is-visible .about-two-word {
+  transform: none;
+}
+
+.about-two-head-line {
+  display: block;
+  height: 4px;
+  width: 0;
+  margin: 16px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-soft));
+  transition: width 1s var(--ease) 0.8s;
+}
+.about-two-inner.is-visible .about-two-head-line {
+  width: 90px;
+}
+
+/* =====================================================
+   BODY  (left text | right big image)
+===================================================== */
+.about-two-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 60px;
+  align-items: center;
+}
+
+/* ----- LEFT ----- */
+.about-two-left {
+  padding-left: 20px;
+}
+
+.about-two-logo {
+  display: block;
+  height: 96px;
+  width: auto;
+  margin-bottom: 26px;
+  opacity: 0;
+  transform: translateY(-40px) scale(0.8);
+  transition: opacity 0.8s var(--ease) 0.3s, transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s;
+}
+.about-two-inner.is-visible .about-two-logo {
+  opacity: 1;
+  transform: none;
+}
+.about-two-inner.is-visible .about-two-logo:hover {
+  transform: scale(1.06) rotate(-3deg);
+  transition-delay: 0s;
+  transition-duration: 0.4s;
+}
+
+/* review block – re-mounted on every change */
+.about-two-review {
+  position: relative;
+  min-height: 250px;
+  animation: reviewIn 0.8s var(--ease) both;
+}
+@keyframes reviewIn {
+  from { opacity: 0; transform: translateX(-40px); filter: blur(6px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
+
+.about-two-quote-icon {
+  position: absolute;
+  top: -22px;
+  left: -14px;
+  width: 64px;
+  height: 64px;
+  fill: var(--orange);
+  opacity: 0.16;
+  pointer-events: none;
+  animation: quotePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s both;
+}
+@keyframes quotePop {
+  from { transform: scale(0) rotate(-20deg); }
+  to   { transform: none; }
+}
+
+.about-two-text {
+  position: relative;
+  margin: 0 0 22px;
+  max-width: 640px;
+  font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.75;
+  color: var(--ink);
+}
+
+.about-two-author h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+.about-two-author span {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.95rem;
+  color: var(--orange);
+  font-weight: 500;
+}
+
+.about-two-stars {
+  display: flex;
+  gap: 3px;
+  margin-top: 10px;
+}
+.about-two-stars svg {
+  fill: #ffb400;
+  animation: starIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.5s + var(--i) * 0.08s) both;
+}
+@keyframes starIn {
+  from { transform: scale(0) rotate(-90deg); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+/* ----- thumbnails ----- */
+.about-two-thumbs {
+  display: flex;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.about-two-thumb {
+  position: relative;
+  width: 78px;
+  height: 78px;
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: #eee;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 10px 22px rgba(11, 31, 92, 0.16);
+  opacity: 0;
+  transform: translateY(30px) scale(0.8);
+  transition:
+    opacity 0.7s var(--ease) calc(0.7s + var(--i) * 0.12s),
+    transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.7s + var(--i) * 0.12s),
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
+  filter: grayscale(0.6) brightness(0.95);
+}
+.about-two-inner.is-visible .about-two-thumb {
+  opacity: 1;
+  transform: none;
+}
+.about-two-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+/* hover + active */
+.about-two-inner.is-visible .about-two-thumb:hover {
+  transform: translateY(-8px) scale(1.06);
+  filter: none;
+  box-shadow: 0 18px 30px rgba(242, 107, 29, 0.28);
+  transition-delay: 0s;
+  transition-duration: 0.35s;
+}
+.about-two-thumb:hover img {
+  transform: scale(1.12);
+}
+.about-two-inner.is-visible .about-two-thumb.is-active {
+  filter: none;
+  transform: translateY(-6px);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--orange), 0 16px 28px rgba(242, 107, 29, 0.3);
+  transition-delay: 0s;
+}
+.about-two-thumb:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 4px;
+}
+
+/* =====================================================
+   RIGHT – ONE BIG IMAGE (no rings / dots / chip)
+   only: hover effect + a light that travels corner → corner
+===================================================== */
+.about-two-visual {
+  display: grid;
+  place-items: center;
+  min-height: 560px;
+}
+
+.about-two-photo {
+  position: relative;
+  width: min(100%, 500px);
+
+}
+
+.about-two-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 1s var(--ease);
+}
+
+
+
+@keyframes lightSweep {
+  0%        { background-position: 100% 100%; }   /* band starts beyond the top-left corner */
+  55%, 100% { background-position: 0% 0%; }       /* band leaves past the bottom-right corner, then rests */
+}
+
+/* ---- hover: lift, zoom, orange glow, faster light ---- */
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 992px) {
+  .about-two-body {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  .about-two-left { padding-left: 0; }
+  .about-two-review { min-height: 0; }
+  .about-two-visual { min-height: 0; }
+}
+
+@media (max-width: 600px) {
+  .about-two { padding: 80px 18px 80px; }
+  .about-two-head { margin-bottom: 44px; }
+  .about-two-logo { height: 76px; }
+  .about-two-thumb { width: 64px; height: 64px; }
+  .about-two-blob { display: none; }
+}
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .about-two *,
+  .about-two *::before,
+  .about-two *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+  .about-two-eyebrow,
+  .about-two-logo,
+  .about-two-thumb { opacity: 1 !important; transform: none !important; }
+  .about-two-word { transform: none !important; }
+  .about-two-head-line { width: 90px; }
+}

@@ -1,5 +1,7 @@
+
 /* ==========================================
    RESTAURANT SEARCH - PREMIUM DESIGN
+   BREADCRUMB OVERLAP FIXED
 ========================================== */
 
 .rs-main {
@@ -55,9 +57,12 @@
   width: 310px;
   min-height: 100vh;
   padding: 22px 15px;
-  position: sticky;
-  top: 0;
-  z-index: 5;
+
+  /* BREADCRUMB OVERLAP FIX */
+  position: relative;
+  top: auto;
+  z-index: 1;
+
   display: flex;
   flex-direction: column;
   overflow: visible;
@@ -233,8 +238,6 @@
   border-radius: 20px;
 }
 
-/* Category row */
-
 .rs-category-option {
   width: 100%;
   display: flex;
@@ -299,7 +302,6 @@
 
 /* ==========================================
    ADVERTISEMENT CARD
-   Separate from scrollbar
 ========================================== */
 
 .rs-ad-card {
@@ -545,8 +547,6 @@
   transform: scale(1.08);
 }
 
-/* Delivery icon */
-
 .rs-delivery-icon {
   position: absolute;
   top: 16px;
@@ -566,7 +566,7 @@
   transform: rotate(-12deg) scale(1.12);
 }
 
-/* Stars */
+/* STARS */
 
 .rs-card-rating {
   position: absolute;
@@ -615,7 +615,7 @@
   color: transparent;
 }
 
-/* Hover overlay */
+/* HOVER OVERLAY */
 
 .rs-card-image-overlay {
   position: absolute;
@@ -645,7 +645,7 @@
   transform: translateY(0);
 }
 
-/* Card title */
+/* CARD TITLE */
 
 .rs-card-title {
   min-height: 53px;
@@ -676,7 +676,7 @@
   transform: translateX(0);
 }
 
-/* Card information */
+/* CARD INFORMATION */
 
 .rs-card-information {
   display: flex;
@@ -895,9 +895,7 @@
   background: var(--rs-orange);
 }
 
-/* ==========================================
-   DETAIL BANNER
-========================================== */
+/* DETAIL BANNER */
 
 .rs-detail-banner {
   height: 360px;
@@ -924,9 +922,7 @@
   );
 }
 
-/* ==========================================
-   DETAIL HEADER
-========================================== */
+/* DETAIL HEADER */
 
 .rs-detail-header {
   background: white;
@@ -1057,9 +1053,7 @@
   margin: 0;
 }
 
-/* ==========================================
-   DETAIL NAVIGATION
-========================================== */
+/* DETAIL NAVIGATION */
 
 .rs-detail-nav {
   display: flex;
@@ -1091,9 +1085,7 @@
   color: var(--rs-orange);
 }
 
-/* ==========================================
-   DETAIL CENTER
-========================================== */
+/* DETAIL CENTER */
 
 .rs-detail-center {
   padding: 25px 20px;
@@ -1159,7 +1151,7 @@
   color: white;
 }
 
-/* Detail menu search */
+/* DETAIL MENU SEARCH */
 
 .rs-detail-menu-search {
   display: flex;
@@ -1564,6 +1556,7 @@
 
   .rs-sidebar {
     position: relative;
+    top: auto;
     width: 100%;
     min-height: auto;
     padding: 20px;
@@ -1681,7 +1674,7 @@
     margin-bottom: 10px;
   }
 
-  /* Detail */
+  /* DETAIL */
 
   .rs-back-button {
     margin: 10px;

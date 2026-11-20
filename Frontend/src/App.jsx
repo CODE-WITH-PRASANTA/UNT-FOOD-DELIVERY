@@ -13,6 +13,9 @@ import Restaurantsearch from "./Pages/Restaurantsearch/Restaurantsearch";
 import Partnerwithus from "./Pages/Partnerwithus/Partnerwithus";
 import Privicypolicy from "./Pages/Privicypolicy/Privicypolicy";
 import Termandcondition from "./Pages/Termandcondition/Termandcondition";
+import About from "./Pages/About/About";
+import Blog from "./Pages/Blog/Blog";
+import Contact from "./Pages/Contact/Contact";
 
 const App = () => {
   return (
@@ -21,6 +24,9 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="about" element={<About/>}/>
+        <Route path="contact" element={<Contact/>}/>
+        <Route path="blog" element={<Blog/>}/>
         <Route path="restaurant-search" element={<Restaurantsearch/>}/>
         <Route path="partner" element={<Partnerwithus/>}/>
         <Route path="privacy" element={<Privicypolicy/>}/>

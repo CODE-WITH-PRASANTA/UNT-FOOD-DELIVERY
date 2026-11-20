@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo, useState } from "react";
 
 import {
@@ -482,13 +483,6 @@ const RatingStars = ({ rating = 5, interactive = false, onChange }) => {
 };
 
 const SectionUnderline = () => <div className="rs-section-underline" />;
-
-const CartButton = ({ count, onClick }) => (
-  <button className="rs-floating-cart" onClick={onClick}>
-    <span>🛒</span>
-    {count > 0 && <span className="rs-cart-count">{count}</span>}
-  </button>
-);
 
 /* =========================
    MAIN COMPONENT
@@ -1148,33 +1142,6 @@ const ResturantsearchMain = () => {
 
   return (
     <div className="rs-main">
-      {/* FLOATING CART */}
-
-      <CartButton
-        count={cartCount}
-        onClick={() =>
-          alert(
-            cart.length
-              ? `You have ${cart.length} items in your cart.`
-              : "Your cart is empty."
-          )
-        }
-      />
-
-      {/* SCROLL TO TOP */}
-
-      <button
-        className="rs-scroll-top"
-        onClick={() =>
-          window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          })
-        }
-      >
-        ↑
-      </button>
-
       {/* DETAIL VIEW */}
 
       {selectedRestaurant ? (

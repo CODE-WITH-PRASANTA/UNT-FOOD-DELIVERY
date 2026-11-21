@@ -5,7 +5,6 @@ import "./AboutThree.css";
 import flavor1 from "../../assets/Rectangle-30905-2.png"; // cinnamon sugar donut
 import flavor2 from "../../assets/Rectangle-30904-1.png"; // caramel cocoa donut
 import flavor3 from "../../assets/Rectangle-30903-1.png"; // honey glazed donut
-import sideDonut from "../../assets/side-donut-2.png"; // decorative donut
 
 /* =====================================================
    DATA
@@ -42,13 +41,20 @@ const FLAVORS = [
 ===================================================== */
 
 // true once the element enters the viewport (fires once)
-const useInView = (threshold = 0.2) => {
+const useInView = (threshold = 0.15) => {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node) return undefined;
+
+    // very old browsers: just show everything
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return undefined;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -69,8 +75,8 @@ const useInView = (threshold = 0.2) => {
 const useScrollProgress = (ref) => {
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!node) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
     let raf = 0;
     const update = () => {
@@ -99,22 +105,26 @@ const useScrollProgress = (ref) => {
    SMALL PIECES
 ===================================================== */
 
-const Words = ({ text }) =>
+// title: every word slides up, words from `accentFrom` get the orange gradient
+const Words = ({ text, accentFrom = Infinity }) =>
   text.split(" ").map((w, i) => (
     <React.Fragment key={i}>
       <span className="about-three-word-mask">
-        <span className="about-three-word" style={{ "--i": i }}>
+        <span
+          className={`about-three-word ${i >= accentFrom ? "about-three-word-accent" : ""}`}
+          style={{ "--i": i }}
+        >
           {w}
         </span>
       </span>{" "}
     </React.Fragment>
   ));
 
-const ArrowIcon = () => (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M5 12h14M13 6l6 6-6 6" />
-  </svg>
-);
+// splits  “quote” rest of the text  →  { quote, rest }
+const splitQuote = (text) => {
+  const match = text.match(/^(“[^”]+”)\s*(.*)$/);
+  return match ? { quote: match[1], rest: match[2] } : { quote: "", rest: text };
+};
 
 /* =====================================================
    COMPONENT
@@ -135,44 +145,53 @@ const AboutThree = () => {
   };
 
   return (
-    <section ref={sectionRef} className="about-three">
-      <span className="about-three-blob blob-a" aria-hidden="true" />
-      <span className="about-three-blob blob-b" aria-hidden="true" />
-      <img src={sideDonut} alt="" className="about-three-donut" aria-hidden="true" />
+    <section ref={sectionRef} className="about-three" aria-labelledby="about-three-title">
+      {/* decorative background (no images) */}
+      <span className="about-three-blob about-three-blob-a" aria-hidden="true" />
+      <span className="about-three-blob about-three-blob-b" aria-hidden="true" />
+      <span className="about-three-dots about-three-dots-top" aria-hidden="true" />
+      <span className="about-three-dots about-three-dots-bottom" aria-hidden="true" />
 
       <div ref={inRef} className={`about-three-inner ${inView ? "is-visible" : ""}`}>
         {/* ===== TITLE ===== */}
         <header className="about-three-head">
           <span className="about-three-eyebrow">New Flavor</span>
-          <h2 aria-label="Explore The New Taste">
-            <Words text="Explore The New Taste" />
+          <h2 id="about-three-title" aria-label="Explore The New Taste">
+            <Words text="Explore The New Taste" accentFrom={2} />
           </h2>
           <span className="about-three-head-line" />
         </header>
 
         {/* ===== CARDS ===== */}
         <div className="about-three-grid">
-          {FLAVORS.map(({ id, year, title, text, img, k }, i) => (
-            <article
-              key={id}
-              className="about-three-card"
-              style={{ "--i": i, "--k": k }}
-              onMouseMove={handleMove}
-            >
-              <div className="about-three-media">
-                <img src={img} alt={title} />
+          {FLAVORS.map(({ id, year, title, text, img, k }, i) => {
+            const { quote, rest } = splitQuote(text);
 
-                <span className="about-three-badge">{year}</span>
+            return (
+              <article
+                key={id}
+                className="about-three-card"
+                style={{ "--i": i, "--k": k }}
+                onMouseMove={handleMove}
+              >
+                <div className="about-three-media">
+                  <img src={img} alt={title} loading="lazy" decoding="async" />
+                  <span className="about-three-badge">{year}</span>
+                </div>
 
-                
-              </div>
-
-              <div className="about-three-body">
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </div>
-            </article>
-          ))}
+                <div className="about-three-body">
+                  <span className="about-three-num" aria-hidden="true">
+                    0{i + 1}
+                  </span>
+                  <h3>{title}</h3>
+                  <p>
+                    {quote && <span className="about-three-quote">{quote}</span>}
+                    {rest}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>

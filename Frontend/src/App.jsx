@@ -13,6 +13,9 @@ import Contact from "./Pages/Contact/Contact";
 import Blog from "./Pages/Blog/Blog";
 import Restaurantsearch from "./Pages/Restaurantsearch/Restaurantsearch";
 import Partnerwithus from "./Pages/Partnerwithus/Partnerwithus";
+import Privicypolicy from "./Pages/Privicypolicy/Privicypolicy";
+import Termandcondition from "./Pages/Termandcondition/Termandcondition";
+import Cart from "./Pages/Cart/Cart";
 
 const App = () => {
   return (
@@ -24,8 +27,16 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/blog" element={<Blog />} />
+
+
         <Route path="/restaurant-search" element={<Restaurantsearch />} />
         <Route path="/partner" element={<Partnerwithus />} />
+
+        <Route path="/cart" element={<Cart/>} />
+      
+    
+        <Route path="/privacy" element={<Privicypolicy/>}/>
+        <Route path="/terms" element={<Termandcondition/>}/>
       </Routes>
 
       <Footer />

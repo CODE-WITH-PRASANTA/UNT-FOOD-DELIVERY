@@ -12,7 +12,7 @@
 
   position: relative;
   z-index: 10;                    /* same layer as the other sections → scrolls over the sticky banner */
-  padding: 110px 32px 120px;
+  padding: 80px 32px 100px;
   background: #ffffff;
   font-family: "Poppins", "Nunito", system-ui, sans-serif;
   color: var(--ink);

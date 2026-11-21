@@ -1,22 +1,35 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
 /* =====================================================
    ABOUT THREE – "Explore The New Taste"
-   (same colours / fonts / hover style as the other About sections)
+   colours = your website: navy + orange on a soft white
 ===================================================== */
 .about-three {
   --orange: #f26b1d;
   --orange-soft: #ff8a3d;
   --navy: #0b1f5c;
+  --navy-dark: #071544;
   --ink: #1b2340;
   --muted: #5a6280;
   --ease: cubic-bezier(0.22, 0.8, 0.24, 1);
 
   position: relative;
   z-index: 10;                    /* same layer as the other sections → scrolls over the sticky banner */
-  padding: 110px 32px 120px;
-  background: #f3f4f9;
+  padding: 80px 32px 100px;
   font-family: "Poppins", "Nunito", system-ui, sans-serif;
   color: var(--ink);
   overflow-x: clip;
+  background:
+    radial-gradient(circle at 8% 14%, rgba(242, 107, 29, 0.1), transparent 34%),
+    radial-gradient(circle at 94% 86%, rgba(11, 31, 92, 0.1), transparent 38%),
+    linear-gradient(180deg, #f3f4f9 0%, #ffffff 100%);
+  box-sizing: border-box;
+}
+
+.about-three *,
+.about-three *::before,
+.about-three *::after {
+  box-sizing: border-box;
 }
 
 /* soft shadow fading in from the section above */
@@ -31,42 +44,61 @@
   pointer-events: none;
 }
 
-/* ----- decorative background ----- */
+/* =====================================================
+   DECORATION (pure CSS – no images)
+===================================================== */
 .about-three-blob {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  opacity: 0.2;
+  opacity: 0.22;
   pointer-events: none;
   transition: transform 0.25s ease-out;
 }
-.blob-a {
+
+.about-three-blob-a {
   width: 300px;
   height: 300px;
-  left: 6%;
+  left: 4%;
   top: 22%;
   background: var(--orange);
   transform: translateY(calc(var(--py, 0) * 80px));
 }
-.blob-b {
-  width: 260px;
-  height: 260px;
-  right: 6%;
-  bottom: 8%;
-  background: #e8264a;
+
+.about-three-blob-b {
+  width: 280px;
+  height: 280px;
+  right: 4%;
+  bottom: 6%;
+  background: var(--navy);
   transform: translateY(calc(var(--py, 0) * -70px));
 }
 
-.about-three-donut {
+/* faint dotted corners */
+.about-three-dots {
   position: absolute;
-  right: -50px;
-  top: 55px;
-  width: 120px;
-  z-index: 0;
+  width: 280px;
+  height: 280px;
   pointer-events: none;
-  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.18));
-  transform: translateY(calc(var(--py, 0) * -50px)) rotate(calc(var(--py, 0) * 260deg));
-  transition: transform 0.25s ease-out;
+  background-image: radial-gradient(rgba(11, 31, 92, 0.22) 1.6px, transparent 1.8px);
+  background-size: 24px 24px;
+}
+
+.about-three-dots-top {
+  top: 70px;
+  right: 0;
+  -webkit-mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 70%);
+  mask-image: radial-gradient(circle at 100% 0%, #000 0%, transparent 70%);
+  transform: translateY(calc(var(--py, 0) * -30px));
+}
+
+.about-three-dots-bottom {
+  bottom: 40px;
+  left: 0;
+  background-image: radial-gradient(rgba(242, 107, 29, 0.4) 1.6px, transparent 1.8px);
+  -webkit-mask-image: radial-gradient(circle at 0% 100%, #000 0%, transparent 70%);
+  mask-image: radial-gradient(circle at 0% 100%, #000 0%, transparent 70%);
+  transform: translateY(calc(var(--py, 0) * 30px));
 }
 
 .about-three-inner {
@@ -85,22 +117,39 @@
 }
 
 .about-three-eyebrow {
-  display: inline-block;
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--orange);
+  background: rgba(242, 107, 29, 0.1);
+  border: 1px solid rgba(242, 107, 29, 0.25);
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
 }
+
+.about-three-eyebrow::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 4px rgba(242, 107, 29, 0.25);
+}
+
 .about-three-inner.is-visible .about-three-eyebrow {
   opacity: 1;
   transform: none;
 }
 
 .about-three-head h2 {
-  margin: 8px 0 0;
+  margin: 14px 0 0;
   font-size: clamp(2.2rem, 4.6vw, 3.8rem);
   line-height: 1.15;
   font-weight: 700;
@@ -111,13 +160,24 @@
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
-  padding-bottom: 0.12em;
+  padding-bottom: 0.14em;
 }
+
 .about-three-word {
   display: inline-block;
   transform: translateY(115%);
   transition: transform 0.9s var(--ease) calc(0.15s + var(--i) * 0.13s);
 }
+
+/* "New Taste" in orange gradient */
+.about-three-word-accent {
+  background: linear-gradient(135deg, var(--orange) 0%, var(--orange-soft) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--orange);
+}
+
 .about-three-inner.is-visible .about-three-word {
   transform: none;
 }
@@ -131,6 +191,7 @@
   background: linear-gradient(90deg, var(--orange), var(--orange-soft));
   transition: width 1s var(--ease) 0.8s;
 }
+
 .about-three-inner.is-visible .about-three-head-line {
   width: 90px;
 }
@@ -142,15 +203,18 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 32px;
+  align-items: stretch;
 }
 
 .about-three-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(11, 31, 92, 0.07);
-  cursor: pointer;
+  border: 1px solid rgba(11, 31, 92, 0.07);
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(11, 31, 92, 0.09);
 
   /* parallax uses `translate`, reveal/hover use `transform` → they never fight */
   translate: 0 calc(var(--py, 0) * var(--k, 0) * 1px);
@@ -161,33 +225,40 @@
   transition:
     opacity 0.9s var(--ease) calc(0.25s + var(--i) * 0.18s),
     transform 1s var(--ease) calc(0.25s + var(--i) * 0.18s),
-    box-shadow 0.4s ease;
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
 }
+
 .about-three-inner.is-visible .about-three-card {
   opacity: 1;
   transform: none;
 }
 
-/* hover: lift + glow + orange bottom bar */
+/* hover: lift + orange glow + bottom bar */
 .about-three-inner.is-visible .about-three-card:hover {
   transform: translateY(-12px);
-  box-shadow: 0 28px 50px rgba(242, 107, 29, 0.25);
-  transition-delay: 0s, 0s, 0s;
-  transition-duration: 0.9s, 0.45s, 0.4s;
+  border-color: rgba(242, 107, 29, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(242, 107, 29, 0.25),
+    0 30px 55px rgba(242, 107, 29, 0.25);
+  transition-delay: 0s, 0s, 0s, 0s;
+  transition-duration: 0.9s, 0.45s, 0.4s, 0.4s;
 }
+
 .about-three-card::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 4px;
+  height: 5px;
   z-index: 4;
   background: linear-gradient(90deg, var(--orange), var(--orange-soft));
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.55s var(--ease);
 }
+
 .about-three-card:hover::after {
   transform: scaleX(1);
 }
@@ -199,6 +270,7 @@
   aspect-ratio: 1.45 / 1;
   background: #e8e8ee;
 }
+
 .about-three-media img {
   display: block;
   width: 100%;
@@ -207,12 +279,31 @@
   transform: scale(1.25);                          /* zooms out while the card reveals */
   transition: transform 1.6s var(--ease) calc(0.25s + var(--i) * 0.18s);
 }
+
 .about-three-inner.is-visible .about-three-media img {
   transform: scale(1);
 }
+
 .about-three-inner.is-visible .about-three-card:hover .about-three-media img {
   transform: scale(1.12) rotate(1.2deg);
   transition: transform 0.9s var(--ease);
+}
+
+/* soft navy fade at the bottom of the image */
+.about-three-media::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 40%;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent, rgba(11, 31, 92, 0.28));
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+
+.about-three-card:hover .about-three-media::before {
+  opacity: 1;
 }
 
 /* glossy sweep across the image on hover */
@@ -224,10 +315,11 @@
   width: 50%;
   height: 100%;
   z-index: 2;
-  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.4), transparent);
   transform: skewX(-20deg);
   pointer-events: none;
 }
+
 .about-three-card:hover .about-three-media::after {
   left: 140%;
   transition: left 0.9s ease;
@@ -248,97 +340,76 @@
   clip-path: polygon(0 0, 100% 0, calc(100% - 18px) 100%, 0 100%);
   box-shadow: 0 8px 18px rgba(242, 107, 29, 0.4);
   transform: translateX(-110%);
-  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.7s + var(--i) * 0.18s),
+  transition:
+    transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) calc(0.7s + var(--i) * 0.18s),
     padding 0.4s var(--ease);
 }
+
 .about-three-inner.is-visible .about-three-badge {
   transform: none;
 }
+
 .about-three-card:hover .about-three-badge {
   padding-right: 54px;
-}
-
-/* ----- hover overlay + button ----- */
-.about-three-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 26px;
-  background: linear-gradient(180deg, transparent 35%, rgba(8, 22, 64, 0.72));
-  opacity: 0;
-  transition: opacity 0.45s ease;
-}
-.about-three-card:hover .about-three-overlay {
-  opacity: 1;
-}
-
-.about-three-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 26px;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-decoration: none;
-  color: #fff;
-  background: linear-gradient(135deg, var(--orange), var(--orange-soft));
-  box-shadow: 0 10px 22px rgba(242, 107, 29, 0.45);
-  transform: translateY(30px);
-  opacity: 0;
-  transition: transform 0.5s var(--ease) 0.05s, opacity 0.4s ease 0.05s, box-shadow 0.25s ease;
-}
-.about-three-card:hover .about-three-btn {
-  transform: none;
-  opacity: 1;
-}
-.about-three-btn svg {
-  transition: transform 0.3s ease;
-}
-.about-three-btn:hover svg {
-  transform: translateX(5px);
-}
-.about-three-btn:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: 3px;
 }
 
 /* ----- text body ----- */
 .about-three-body {
   position: relative;
-  padding: 26px 30px 34px;
+  flex: 1;
+  padding: 28px 30px 36px;
   background: #fff;
   overflow: hidden;
 }
+
 /* mouse spotlight */
 .about-three-body::before {
   content: "";
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    240px circle at var(--mx, 50%) var(--my, 0%),
-    rgba(242, 107, 29, 0.12),
+    260px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(242, 107, 29, 0.13),
     transparent 70%
   );
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
+
 .about-three-card:hover .about-three-body::before {
   opacity: 1;
+}
+
+/* big faint number */
+.about-three-num {
+  position: absolute;
+  top: 14px;
+  right: 24px;
+  font-size: 3.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: rgba(11, 31, 92, 0.06);
+  transition: color 0.4s ease, transform 0.5s var(--ease);
+  pointer-events: none;
+}
+
+.about-three-card:hover .about-three-num {
+  color: rgba(242, 107, 29, 0.18);
+  transform: translateY(-4px) scale(1.08);
 }
 
 .about-three-body h3 {
   position: relative;
   margin: 0 0 12px;
-  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
+  padding-right: 60px;
+  font-size: clamp(1.3rem, 1.8vw, 1.65rem);
   font-weight: 700;
+  line-height: 1.25;
   color: var(--navy);
   transition: color 0.3s ease, transform 0.4s var(--ease);
 }
+
 .about-three-card:hover .about-three-body h3 {
   color: var(--orange);
   transform: translateX(6px);
@@ -348,27 +419,61 @@
   position: relative;
   margin: 0;
   font-size: 1rem;
-  line-height: 1.85;
+  line-height: 1.8;
   color: var(--muted);
+}
+
+.about-three-quote {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--navy);
+  transition: color 0.3s ease;
+}
+
+.about-three-card:hover .about-three-quote {
+  color: var(--orange);
 }
 
 /* =====================================================
    RESPONSIVE
 ===================================================== */
+@media (max-width: 1199px) {
+  .about-three { padding: 96px 28px 104px; }
+  .about-three-grid { gap: 26px; }
+  .about-three-body { padding: 24px 24px 30px; }
+}
+
 @media (max-width: 1024px) {
   .about-three-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .about-three-card { translate: none; }
+
+  /* the 3rd card sits centred under the other two */
+  .about-three-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc(50% - 13px);
+    justify-self: center;
+  }
 }
 
 @media (max-width: 640px) {
-  .about-three { padding: 80px 18px 80px; }
+  .about-three { padding: 76px 16px 80px; }
   .about-three-head { margin-bottom: 44px; }
-  .about-three-grid { grid-template-columns: 1fr; gap: 26px; }
+  .about-three-grid { grid-template-columns: 1fr; gap: 24px; }
+  .about-three-card:last-child:nth-child(odd) { width: 100%; }
   .about-three-blob { display: none; }
-  .about-three-donut { width: 110px; right: -55px; }
-  /* touch screens have no hover → always show the button */
-  .about-three-overlay { opacity: 1; }
-  .about-three-btn { transform: none; opacity: 1; }
+  .about-three-dots { width: 180px; height: 180px; }
+  .about-three-badge { font-size: 1rem; padding: 10px 34px 10px 24px; }
+  .about-three-body { padding: 22px 20px 28px; }
+  .about-three-num { font-size: 3rem; }
+}
+
+/* touch screens: no sticky hover lift */
+@media (hover: none) {
+  .about-three-inner.is-visible .about-three-card:hover {
+    transform: none;
+  }
 }
 
 /* =====================================================

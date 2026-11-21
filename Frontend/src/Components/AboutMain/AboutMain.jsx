@@ -6,8 +6,6 @@ import img1 from "../../assets/Rectangle-30899.png"; // left  column, top
 import img3 from "../../assets/Rectangle-30900.png"; // left  column, bottom
 import img2 from "../../assets/Rectangle-30901.png"; // right column, top
 import img4 from "../../assets/Rectangle-30902.png"; // right column, bottom
-import sideDonut1 from "../../assets/side-donut-1.png";
-import sideDonut2 from "../../assets/side-donut-2.png";
 import bannerRed from "../../assets/red.png";
 import bannerOrange from "../../assets/orange.png";
 
@@ -22,7 +20,14 @@ const useInView = (threshold = 0.25) => {
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node) return undefined;
+
+    // very old browsers: just show everything
+    if (typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return undefined;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -44,7 +49,7 @@ const useCountUp = (end, start, duration = 2000) => {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (!start) return;
+    if (!start) return undefined;
     let frame;
     let t0;
     const tick = (t) => {
@@ -65,8 +70,8 @@ const useCountUp = (end, start, duration = 2000) => {
 const useScrollProgress = (ref) => {
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!node) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
     let raf = 0;
     const update = () => {
@@ -98,17 +103,20 @@ const useScrollProgress = (ref) => {
 // letter-by-letter title
 const SplitChars = ({ text }) =>
   text.split("").map((c, i) => (
-    <span className="ch" style={{ "--i": i }} key={i} aria-hidden="true">
+    <span className="about-ch" style={{ "--i": i }} key={i} aria-hidden="true">
       {c === " " ? "\u00A0" : c}
     </span>
   ));
 
-// word-by-word rise inside a mask
-const Words = ({ text }) =>
+// word-by-word rise inside a mask (words from `accentFrom` get the orange gradient)
+const Words = ({ text, accentFrom = Infinity }) =>
   text.split(" ").map((w, i) => (
     <React.Fragment key={i}>
-      <span className="word-mask">
-        <span className="word" style={{ "--i": i }}>
+      <span className="about-word-mask">
+        <span
+          className={`about-word ${i >= accentFrom ? "about-word-accent" : ""}`}
+          style={{ "--i": i }}
+        >
           {w}
         </span>
       </span>{" "}
@@ -117,31 +125,31 @@ const Words = ({ text }) =>
 
 const CheckIcon = () => (
   <svg className="about-check" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
-    <circle className="chk-circle" cx="12" cy="12" r="10.5" pathLength="1" />
-    <path className="chk-tick" d="M7 12.5l3.2 3.2L17 8.8" pathLength="1" />
+    <circle className="about-chk-circle" cx="12" cy="12" r="10.5" pathLength="1" />
+    <path className="about-chk-tick" d="M7 12.5l3.2 3.2L17 8.8" pathLength="1" />
   </svg>
 );
 
 const ExperienceBadge = ({ active }) => {
   const years = useCountUp(5, active, 2200);
   return (
-    <div className={`exp-badge ${active ? "is-visible" : ""}`}>
+    <div className={`about-exp ${active ? "is-visible" : ""}`}>
       {/* rotating ring text */}
-      <svg className="exp-ring" viewBox="0 0 200 200" aria-hidden="true">
+      <svg className="about-exp-ring" viewBox="0 0 200 200" aria-hidden="true">
         <defs>
-          <path id="expCircle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
+          <path id="aboutExpCircle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0" />
         </defs>
         <text>
-          <textPath href="#expCircle" startOffset="0">
+          <textPath href="#aboutExpCircle" startOffset="0">
             EXPERIENCE • YEARS • EXPERIENCE • YEARS • EXPERIENCE • YEARS •
           </textPath>
         </text>
       </svg>
 
       {/* count-up number (stays still in the middle) */}
-      <div className="exp-center">
-        <span className="exp-number">{years}</span>
-        <span className="exp-label">Years</span>
+      <div className="about-exp-center">
+        <span className="about-exp-number">{years}</span>
+        <span className="about-exp-label">Years</span>
       </div>
     </div>
   );
@@ -178,22 +186,21 @@ const AboutMain = () => {
             <SplitChars text="About Us" />
           </h1>
           <span className="about-title-line" />
-          
         </div>
       </div>
 
       {/* ===== MAIN ABOUT ===== */}
       <section ref={mainRef} className="about-main">
-        {/* soft drifting background blobs */}
-        <span className="about-blob blob-a" aria-hidden="true" />
-        <span className="about-blob blob-b" aria-hidden="true" />
-
-        <img src={sideDonut1} alt="" className="about-float-donut" aria-hidden="true" />
+        {/* soft drifting background glows + dotted corners (no images) */}
+        <span className="about-blob about-blob-a" aria-hidden="true" />
+        <span className="about-blob about-blob-b" aria-hidden="true" />
+        <span className="about-dots about-dots-left" aria-hidden="true" />
+        <span className="about-dots about-dots-right" aria-hidden="true" />
 
         {/* LEFT: text */}
         <div ref={textRef} className={`about-text ${textIn ? "is-visible" : ""}`}>
           <h2 aria-label="Quality And Fresh">
-            <Words text="Quality And Fresh" />
+            <Words text="Quality And Fresh" accentFrom={2} />
           </h2>
           <h3 className="about-brand">UNT – Delivering Deliciousness</h3>
 
@@ -222,21 +229,21 @@ const AboutMain = () => {
 
         {/* RIGHT: 4 images (2 columns) + rotating badge */}
         <div ref={gridRef} className={`about-gallery ${gridIn ? "is-visible" : ""}`}>
-          <div className="gal-col gal-col-1">
-            <div className="gal-img from-left" style={{ "--d": "0s" }}>
-              <img src={img1} alt="Chocolate and nut donuts in a box" />
+          <div className="about-gal-col about-gal-col-1">
+            <div className="about-gal-img about-from-left" style={{ "--d": "0s" }}>
+              <img src={img1} alt="Chocolate and nut donuts in a box" loading="lazy" decoding="async" />
             </div>
-            <div className="gal-img from-bottom" style={{ "--d": "0.3s" }}>
-              <img src={img3} alt="Child holding a sprinkle donut" />
+            <div className="about-gal-img about-from-bottom" style={{ "--d": "0.3s" }}>
+              <img src={img3} alt="Child holding a sprinkle donut" loading="lazy" decoding="async" />
             </div>
           </div>
 
-          <div className="gal-col gal-col-2">
-            <div className="gal-img from-top" style={{ "--d": "0.15s" }}>
-              <img src={img2} alt="Smiling child eating a donut" />
+          <div className="about-gal-col about-gal-col-2">
+            <div className="about-gal-img about-from-top" style={{ "--d": "0.15s" }}>
+              <img src={img2} alt="Smiling child eating a donut" loading="lazy" decoding="async" />
             </div>
-            <div className="gal-img from-right" style={{ "--d": "0.45s" }}>
-              <img src={img4} alt="Colourful glazed donuts" />
+            <div className="about-gal-img about-from-right" style={{ "--d": "0.45s" }}>
+              <img src={img4} alt="Colourful glazed donuts" loading="lazy" decoding="async" />
             </div>
           </div>
 
@@ -244,14 +251,25 @@ const AboutMain = () => {
         </div>
       </section>
 
-      {/* ===== PROMO BANNERS ===== */}
+      {/* ===== PROMO BANNERS (both exactly the same size) ===== */}
       <section ref={promoRef} className={`about-promos ${promoIn ? "is-visible" : ""}`}>
-        <img src={sideDonut2} alt="" className="about-float-donut right" aria-hidden="true" />
-        <a href="#heart" className="promo promo-left">
-          <img src={bannerRed} alt="Sweet Heart Donut – 30% off your first order" />
+        <a href="#heart" className="about-promo about-promo-left">
+          <img
+            src={bannerRed}
+            alt="Sweet Heart Donut – 30% off your first order"
+            loading="lazy"
+            decoding="async"
+          />
+          <span className="about-promo-shine" aria-hidden="true" />
         </a>
-        <a href="#orange" className="promo promo-right">
-          <img src={bannerOrange} alt="Sweet Orange Donut – 30% off your first order" />
+        <a href="#orange" className="about-promo about-promo-right">
+          <img
+            src={bannerOrange}
+            alt="Sweet Orange Donut – 30% off your first order"
+            loading="lazy"
+            decoding="async"
+          />
+          <span className="about-promo-shine" aria-hidden="true" />
         </a>
       </section>
     </div>

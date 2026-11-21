@@ -31,23 +31,51 @@ const ACCOUNT_LINKS = [
   { label: 'Profile', href: '/profile' },
 ]
 
+const getActiveLinkFromPath = () => {
+  if (typeof window === 'undefined') return 'home'
+  const path = window.location.pathname.toLowerCase()
+  if (path === '/' || path === '') return 'home'
+  const matched = NAV_LINKS.find(
+    (link) => link.href !== '/' && (path === link.href || path.startsWith(`${link.href}/`))
+  )
+  return matched ? matched.id : ''
+}
+
 const Navbar = ({ wishlistCount = 0, cartCount = 0 }) => {
-  const [activeLink, setActiveLink] = useState('home')
+  const [activeLink, setActiveLink] = useState(getActiveLinkFromPath)
   const [menuOpen, setMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState(null) // 'location' | 'account' | null
   const [location, setLocation] = useState('Select Location')
   const [scrolled, setScrolled] = useState(false)
   const navbarRef = useRef(null)
 
-  // Close dropdowns on outside click
+  // Sync active state on browser back/forward navigation
+  useEffect(() => {
+    const syncActiveRoute = () => setActiveLink(getActiveLinkFromPath())
+    syncActiveRoute()
+    window.addEventListener('popstate', syncActiveRoute)
+    return () => window.removeEventListener('popstate', syncActiveRoute)
+  }, [])
+
+  // Close dropdowns on outside click or Escape key
   useEffect(() => {
     const handleOutside = (e) => {
       if (navbarRef.current && !navbarRef.current.contains(e.target)) {
         setOpenDropdown(null)
       }
     }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setOpenDropdown(null)
+        setMenuOpen(false)
+      }
+    }
     document.addEventListener('mousedown', handleOutside)
-    return () => document.removeEventListener('mousedown', handleOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }, [])
 
   // Elevate navbar on scroll
@@ -81,134 +109,151 @@ const Navbar = ({ wishlistCount = 0, cartCount = 0 }) => {
   }
 
   return (
-    <header className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`} ref={navbarRef}>
-      <div className="navbar-container">
-        {/* Logo */}
-        <a href="/" className="navbar-logo" onClick={() => handleNavClick('home')}>
-          <img src={navLogo} alt="UNT - Delivering Deliciousness" className="navbar-logo-img" />
-        </a>
+    <>
+      <header className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`} ref={navbarRef}>
+        <div className="navbar-container">
+          {/* Logo */}
+          <a href="/" className="navbar-logo" onClick={() => handleNavClick('home')}>
+            <img src={navLogo} alt="UNT - Delivering Deliciousness" className="navbar-logo-img" />
+          </a>
 
-        <span className="navbar-divider navbar-divider-main" />
+          <span className="navbar-divider navbar-divider-main" />
 
-        {/* Desktop links */}
-        <nav className={`navbar-menu ${menuOpen ? 'navbar-menu-open' : ''}`} aria-label="Main navigation">
-          <ul className="navbar-links">
-            {NAV_LINKS.map(({ id, label, href, icon: Icon }) => (
-              <li className="navbar-links-item" key={id}>
-                <a
-                  href={href}
-                  className={`navbar-link ${activeLink === id ? 'navbar-link-active' : ''}`}
-                  onClick={() => handleNavClick(id)}
+          {/* Desktop & Mobile Drawer Navigation */}
+          <nav className={`navbar-menu ${menuOpen ? 'navbar-menu-open' : ''}`} aria-label="Main navigation">
+            <ul className="navbar-links">
+              {NAV_LINKS.map(({ id, label, href, icon: Icon }) => (
+                <li className="navbar-links-item" key={id}>
+                  <a
+                    href={href}
+                    className={`navbar-link ${activeLink === id ? 'navbar-link-active' : ''}`}
+                    aria-current={activeLink === id ? 'page' : undefined}
+                    onClick={() => handleNavClick(id)}
+                  >
+                    <Icon className="navbar-link-icon" />
+                    <span className="navbar-link-text">{label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="navbar-selectors">
+              {/* Location Selector */}
+              <div className="navbar-dropdown">
+                <button
+                  type="button"
+                  className={`navbar-dropdown-btn navbar-selector-pill ${
+                    location !== 'Select Location' ? 'navbar-selector-selected' : ''
+                  }`}
+                  onClick={() => toggleDropdown('location')}
+                  aria-expanded={openDropdown === 'location'}
                 >
-                  <Icon className="navbar-link-icon" />
-                  <span className="navbar-link-text">{label}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
+                  <FiMapPin className="navbar-link-icon navbar-pin-icon" />
+                  <span className="navbar-link-text">{location}</span>
+                  <FiChevronDown
+                    className={`navbar-chevron ${openDropdown === 'location' ? 'navbar-chevron-open' : ''}`}
+                  />
+                </button>
+                {openDropdown === 'location' && (
+                  <ul className="navbar-dropdown-list">
+                    {LOCATIONS.map((city) => (
+                      <li key={city}>
+                        <button
+                          type="button"
+                          className={`navbar-dropdown-option ${
+                            location === city ? 'navbar-dropdown-option-active' : ''
+                          }`}
+                          onClick={() => handleLocationSelect(city)}
+                        >
+                          {city}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
 
-          <div className="navbar-selectors">
-            {/* Location */}
-            <div className="navbar-dropdown">
-              <button
-                type="button"
-                className="navbar-dropdown-btn"
-                onClick={() => toggleDropdown('location')}
-                aria-expanded={openDropdown === 'location'}
-              >
-                <FiMapPin className="navbar-link-icon" />
-                <span className="navbar-link-text">{location}</span>
-                <FiChevronDown
-                  className={`navbar-chevron ${openDropdown === 'location' ? 'navbar-chevron-open' : ''}`}
-                />
-              </button>
-              {openDropdown === 'location' && (
-                <ul className="navbar-dropdown-list">
-                  {LOCATIONS.map((city) => (
-                    <li key={city}>
-                      <button
-                        type="button"
-                        className={`navbar-dropdown-option ${location === city ? 'navbar-dropdown-option-active' : ''}`}
-                        onClick={() => handleLocationSelect(city)}
-                      >
-                        {city}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <span className="navbar-divider navbar-divider-small" />
+
+              {/* Account Dropdown */}
+              <div className="navbar-dropdown">
+                <button
+                  type="button"
+                  className="navbar-dropdown-btn navbar-selector-pill"
+                  onClick={() => toggleDropdown('account')}
+                  aria-expanded={openDropdown === 'account'}
+                >
+                  <FiUser className="navbar-link-icon" />
+                  <span className="navbar-link-text">My Account</span>
+                  <FiChevronDown
+                    className={`navbar-chevron ${openDropdown === 'account' ? 'navbar-chevron-open' : ''}`}
+                  />
+                </button>
+                {openDropdown === 'account' && (
+                  <ul className="navbar-dropdown-list navbar-dropdown-list-right">
+                    {ACCOUNT_LINKS.map(({ label, href }) => (
+                      <li key={label}>
+                        <a
+                          href={href}
+                          className="navbar-dropdown-option"
+                          onClick={() => {
+                            setOpenDropdown(null)
+                            setMenuOpen(false)
+                          }}
+                        >
+                          {label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
+          </nav>
 
-            <span className="navbar-divider navbar-divider-small" />
+          <span className="navbar-divider navbar-divider-actions" />
 
-            {/* Account */}
-            <div className="navbar-dropdown">
-              <button
-                type="button"
-                className="navbar-dropdown-btn"
-                onClick={() => toggleDropdown('account')}
-                aria-expanded={openDropdown === 'account'}
-              >
-                <FiUser className="navbar-link-icon" />
-                <span className="navbar-link-text">My Account</span>
-                <FiChevronDown
-                  className={`navbar-chevron ${openDropdown === 'account' ? 'navbar-chevron-open' : ''}`}
-                />
-              </button>
-              {openDropdown === 'account' && (
-                <ul className="navbar-dropdown-list navbar-dropdown-list-right">
-                  {ACCOUNT_LINKS.map(({ label, href }) => (
-                    <li key={label}>
-                      <a href={href} className="navbar-dropdown-option" onClick={() => setOpenDropdown(null)}>
-                        {label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+          {/* Wishlist & Cart */}
+          <div className="navbar-actions">
+            <a href="/wishlist" className="navbar-action" aria-label={`Wishlist, ${wishlistCount} items`}>
+              <span className="navbar-action-icon-wrap">
+                <FiHeart className="navbar-action-icon" />
+                <span className="navbar-badge">{wishlistCount}</span>
+              </span>
+              <span className="navbar-action-text">Wishlist</span>
+            </a>
+
+            <a href="/cart" className="navbar-action" aria-label={`Cart, ${cartCount} items`}>
+              <span className="navbar-action-icon-wrap">
+                <FiShoppingCart className="navbar-action-icon" />
+                <span className="navbar-badge">{cartCount}</span>
+              </span>
+              <span className="navbar-action-text">Cart</span>
+            </a>
+
+            {/* Mobile Drawer Toggle */}
+            <button
+              type="button"
+              className="navbar-toggle"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <FiX /> : <FiMenu />}
+            </button>
           </div>
-        </nav>
-
-        <span className="navbar-divider navbar-divider-actions" />
-
-        {/* Wishlist & Cart */}
-        <div className="navbar-actions">
-          <a href="/wishlist" className="navbar-action" aria-label={`Wishlist, ${wishlistCount} items`}>
-            <span className="navbar-action-icon-wrap">
-              <FiHeart className="navbar-action-icon" />
-              <span className="navbar-badge">{wishlistCount}</span>
-            </span>
-            <span className="navbar-action-text">Wishlist</span>
-          </a>
-
-          <a href="/cart" className="navbar-action" aria-label={`Cart, ${cartCount} items`}>
-            <span className="navbar-action-icon-wrap">
-              <FiShoppingCart className="navbar-action-icon" />
-              <span className="navbar-badge">{cartCount}</span>
-            </span>
-            <span className="navbar-action-text">Cart</span>
-          </a>
-
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            className="navbar-toggle"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-          >
-            {menuOpen ? <FiX /> : <FiMenu />}
-          </button>
         </div>
-      </div>
 
-      {/* Mobile overlay */}
-      <div
-        className={`navbar-overlay ${menuOpen ? 'navbar-overlay-show' : ''}`}
-        onClick={() => setMenuOpen(false)}
-      />
-    </header>
+        {/* Mobile Backdrop Overlay */}
+        <div
+          className={`navbar-overlay ${menuOpen ? 'navbar-overlay-show' : ''}`}
+          onClick={() => setMenuOpen(false)}
+        />
+      </header>
+
+      {/* Spacer so content below doesn't hide under the fixed navbar */}
+      <div className="navbar-spacer" />
+    </>
   )
 }
 

@@ -1,0 +1,390 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* ============ Theme (same as your website header / hero) ============ */
+.HeroOurBestOrder {
+  --HeroOurBestOrder-navy: #0b1f5c;
+  --HeroOurBestOrder-orange: #f26b1d;
+  --HeroOurBestOrder-orange-light: #ff8a3d;
+  --HeroOurBestOrder-white: #ffffff;
+
+  /* slider settings */
+  --HeroOurBestOrder-visible: 7;     /* columns visible at once */
+  --HeroOurBestOrder-col-gap: 22px;
+  --HeroOurBestOrder-row-gap: 22px;
+
+  position: relative;
+  width: 100%;
+  /* left & right space: grows with the screen, never too small */
+  padding-block: 64px 72px;
+  padding-inline: clamp(18px, 6.5vw, 140px);
+  font-family: 'Poppins', sans-serif;
+  color: var(--HeroOurBestOrder-navy);
+  background:
+    radial-gradient(circle at 92% 0%, rgba(242, 107, 29, 0.07), transparent 38%),
+    radial-gradient(circle at 0% 100%, rgba(11, 31, 92, 0.05), transparent 40%),
+    var(--HeroOurBestOrder-white);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.HeroOurBestOrder *,
+.HeroOurBestOrder *::before,
+.HeroOurBestOrder *::after {
+  box-sizing: border-box;
+}
+
+.HeroOurBestOrder-container {
+  width: 100%;
+  max-width: 1520px;
+  margin: 0 auto;
+}
+
+/* ============ Header ============ */
+.HeroOurBestOrder-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 30px;
+  padding-inline: 6px;
+}
+
+.HeroOurBestOrder-title {
+  position: relative;
+  margin: 0;
+  padding-bottom: 14px;
+  font-size: clamp(1.3rem, 1.9vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--HeroOurBestOrder-navy);
+}
+
+.HeroOurBestOrder-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 54px;
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--HeroOurBestOrder-orange), var(--HeroOurBestOrder-orange-light));
+}
+
+/* ============ Arrow buttons ============ */
+.HeroOurBestOrder-controls {
+  display: flex;
+  gap: 14px;
+}
+
+.HeroOurBestOrder-nav {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--HeroOurBestOrder-navy);
+  background: #e6e8ee;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+}
+
+.HeroOurBestOrder-nav:hover:not(:disabled) {
+  transform: translateY(-3px);
+  color: var(--HeroOurBestOrder-white);
+  background: linear-gradient(135deg, var(--HeroOurBestOrder-orange), var(--HeroOurBestOrder-orange-light));
+  box-shadow: 0 12px 24px rgba(242, 107, 29, 0.4);
+}
+
+.HeroOurBestOrder-nav:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.HeroOurBestOrder-nav:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.HeroOurBestOrder-nav:focus-visible,
+.HeroOurBestOrder-card:focus-visible {
+  outline: 3px solid var(--HeroOurBestOrder-orange);
+  outline-offset: 3px;
+}
+
+/* ============ Scroller (2 rows, scrolls sideways) ============ */
+.HeroOurBestOrder-scroller {
+  --HeroOurBestOrder-fl: 0px;
+  --HeroOurBestOrder-fr: 0px;
+
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column;
+  grid-auto-columns: calc(
+    (100% - (var(--HeroOurBestOrder-visible) - 1) * var(--HeroOurBestOrder-col-gap))
+    / var(--HeroOurBestOrder-visible)
+  );
+  column-gap: var(--HeroOurBestOrder-col-gap);
+  row-gap: var(--HeroOurBestOrder-row-gap);
+
+  margin: -22px 0 0;
+  padding: 22px 6px 34px;
+  list-style: none;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 6px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--HeroOurBestOrder-fl), #000 calc(100% - var(--HeroOurBestOrder-fr)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--HeroOurBestOrder-fl), #000 calc(100% - var(--HeroOurBestOrder-fr)), transparent 100%);
+}
+
+.HeroOurBestOrder-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.HeroOurBestOrder-fade-left {
+  --HeroOurBestOrder-fl: 48px;
+}
+
+.HeroOurBestOrder-fade-right {
+  --HeroOurBestOrder-fr: 48px;
+}
+
+/* while the mouse is dragging */
+.HeroOurBestOrder-scroller-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.HeroOurBestOrder-scroller-dragging .HeroOurBestOrder-card {
+  pointer-events: none;
+}
+
+/* ============ Item (reveal on scroll) ============ */
+.HeroOurBestOrder-item {
+  min-width: 0;
+  scroll-snap-align: start;
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 0.7s ease var(--HeroOurBestOrder-delay, 0s),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--HeroOurBestOrder-delay, 0s);
+}
+
+.HeroOurBestOrder-inview .HeroOurBestOrder-item {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============ Card (whole image is the link) ============ */
+.HeroOurBestOrder-card {
+  position: relative;
+  display: block;
+  height: 100%;
+  padding: 10px;
+  border-radius: 24px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-tap-highlight-color: transparent;
+  background: transparent;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.45s ease,
+    box-shadow 0.45s ease;
+}
+
+.HeroOurBestOrder-card:hover {
+  transform: translateY(-8px);
+  background: linear-gradient(180deg, #ffffff 0%, #fff6ef 100%);
+  box-shadow:
+    0 0 0 2px rgba(242, 107, 29, 0.35),
+    0 24px 44px rgba(11, 31, 92, 0.14);
+}
+
+.HeroOurBestOrder-card:active {
+  transform: translateY(-2px) scale(0.97);
+}
+
+/* image area */
+.HeroOurBestOrder-card-media {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+/* soft orange glow behind the food */
+.HeroOurBestOrder-card-media::before {
+  content: '';
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  width: 78%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 107, 29, 0.28), rgba(242, 107, 29, 0) 68%);
+  transform: translateX(-50%) scale(0.6);
+  opacity: 0;
+  transition: transform 0.55s ease, opacity 0.55s ease;
+}
+
+.HeroOurBestOrder-card:hover .HeroOurBestOrder-card-media::before {
+  transform: translateX(-50%) scale(1.15);
+  opacity: 1;
+}
+
+.HeroOurBestOrder-card-img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  mix-blend-mode: multiply; /* white photo backgrounds blend into the glow */
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+}
+
+.HeroOurBestOrder-card:hover .HeroOurBestOrder-card-img {
+  transform: scale(1.07);
+  filter: saturate(1.15) contrast(1.03);
+}
+
+/* little arrow chip on hover */
+.HeroOurBestOrder-card-chip {
+  position: absolute;
+  top: 2%;
+  right: 4%;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--HeroOurBestOrder-white);
+  background: linear-gradient(135deg, var(--HeroOurBestOrder-orange), var(--HeroOurBestOrder-orange-light));
+  box-shadow: 0 8px 18px rgba(242, 107, 29, 0.45);
+  opacity: 0;
+  transform: scale(0.4) rotate(-45deg);
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.HeroOurBestOrder-card-chip svg {
+  width: 16px;
+  height: 16px;
+}
+
+.HeroOurBestOrder-card:hover .HeroOurBestOrder-card-chip {
+  opacity: 1;
+  transform: scale(1) rotate(-45deg);
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 1399px) {
+  .HeroOurBestOrder {
+    --HeroOurBestOrder-visible: 6;
+    --HeroOurBestOrder-col-gap: 20px;
+  }
+}
+
+@media (max-width: 1199px) {
+  .HeroOurBestOrder {
+    --HeroOurBestOrder-visible: 5;
+  }
+}
+
+@media (max-width: 991px) {
+  .HeroOurBestOrder {
+    --HeroOurBestOrder-visible: 4;
+    --HeroOurBestOrder-col-gap: 16px;
+    padding-block: 52px 58px;
+  }
+}
+
+@media (max-width: 767px) {
+  .HeroOurBestOrder {
+    --HeroOurBestOrder-visible: 3.3;  /* a part of the next column peeks out => shows it scrolls */
+    --HeroOurBestOrder-col-gap: 12px;
+    --HeroOurBestOrder-row-gap: 16px;
+    padding-block: 42px 48px;
+  }
+
+  .HeroOurBestOrder-header {
+    margin-bottom: 22px;
+  }
+
+  .HeroOurBestOrder-nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .HeroOurBestOrder-card {
+    padding: 6px;
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 575px) {
+  .HeroOurBestOrder {
+    --HeroOurBestOrder-visible: 2.4;
+    --HeroOurBestOrder-col-gap: 10px;
+  }
+
+  .HeroOurBestOrder-fade-left {
+    --HeroOurBestOrder-fl: 28px;
+  }
+
+  .HeroOurBestOrder-fade-right {
+    --HeroOurBestOrder-fr: 28px;
+  }
+}
+
+@media (max-width: 399px) {
+  .HeroOurBestOrder {
+    --HeroOurBestOrder-visible: 2.1;
+  }
+
+  .HeroOurBestOrder-controls {
+    gap: 10px;
+  }
+}
+
+/* touch screens: no sticky hover lift */
+@media (hover: none) {
+  .HeroOurBestOrder-card:hover {
+    transform: none;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .HeroOurBestOrder-scroller {
+    cursor: auto;
+  }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  .HeroOurBestOrder-scroller {
+    scroll-behavior: auto;
+  }
+
+  .HeroOurBestOrder-item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .HeroOurBestOrder-card,
+  .HeroOurBestOrder-card-img {
+    transition-duration: 0.01ms !important;
+  }
+}

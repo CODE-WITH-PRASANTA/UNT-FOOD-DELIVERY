@@ -505,24 +505,7 @@ function PartnerwithusMain() {
       </section>
 
       {/* BOTTOM CTA */}
-      <section className="partner-bottom-cta partner-reveal">
-        <div>
-          <h2>Ready to Grow Your Food Business?</h2>
-
-          <p>
-            Take the next step and explore partnership opportunities
-            with UNT Food Delivery.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          className="partner-terms-anchor"
-          onClick={scrollToForm}
-        >
-          Become a Partner <span>→</span>
-        </button>
-      </section>
+      
     </main>
   );
 }

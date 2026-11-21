@@ -1,0 +1,220 @@
+
+.restaurant-breadcrumb {
+  position: relative;
+  width: 100%;
+  height: 410px;
+  min-height: 410px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: #17120f;
+}
+
+/* Background Image */
+.restaurant-breadcrumb-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: var(--restaurant-bg);
+  background-position: center 48%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+  transform: scale(1.05);
+  animation: restaurantBackgroundMotion 24s ease-in-out infinite alternate;
+}
+
+/* Dark Overlay */
+.restaurant-breadcrumb-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  
+}
+
+/* Container */
+.restaurant-breadcrumb-container {
+  width: 100%;
+  max-width: 1320px;
+  padding: 0 35px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* Content */
+.restaurant-breadcrumb-content {
+  max-width: 650px;
+  animation: restaurantContentReveal 1s ease both;
+}
+
+/* Label */
+.restaurant-breadcrumb-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffb347;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.restaurant-breadcrumb-label-line {
+  display: inline-block;
+  width: 35px;
+  height: 2px;
+  background: #ffb347;
+}
+
+/* Heading */
+.restaurant-breadcrumb-content h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(36px, 4.5vw, 57px);
+  line-height: 1.13;
+  font-weight: 800;
+  letter-spacing: -1.8px;
+  font-family: "Manrope", sans-serif;
+}
+
+.restaurant-breadcrumb-content h1 span {
+  color: #ffb347;
+}
+
+/* Description */
+.restaurant-breadcrumb-content p {
+  max-width: 470px;
+  margin: 20px 0 25px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 15px;
+  line-height: 1.8;
+  font-weight: 400;
+  font-family: "DM Sans", sans-serif;
+}
+
+/* Navigation */
+.restaurant-breadcrumb-navigation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "DM Sans", sans-serif;
+}
+
+.restaurant-breadcrumb-navigation a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.restaurant-breadcrumb-navigation a:hover {
+  color: #ffb347;
+}
+
+.restaurant-breadcrumb-navigation > span {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.restaurant-breadcrumb-navigation .restaurant-breadcrumb-current {
+  color: #ffb347;
+}
+
+/* Background Animation */
+@keyframes restaurantBackgroundMotion {
+  0% {
+    transform: scale(1.05);
+    background-position: 48% 48%;
+  }
+
+  50% {
+    transform: scale(1.12);
+    background-position: 52% 52%;
+  }
+
+  100% {
+    transform: scale(1.06);
+    background-position: 48% 48%;
+  }
+}
+
+/* Content Animation */
+@keyframes restaurantContentReveal {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .restaurant-breadcrumb {
+    height: 380px;
+    min-height: 380px;
+  }
+
+  .restaurant-breadcrumb-container {
+    padding: 0 24px;
+  }
+
+  .restaurant-breadcrumb-content {
+    max-width: 550px;
+  }
+
+  .restaurant-breadcrumb-content h1 {
+    font-size: 39px;
+  }
+
+  .restaurant-breadcrumb-content p {
+    font-size: 14px;
+    max-width: 400px;
+  }
+
+  .restaurant-breadcrumb-overlay {
+    background: linear-gradient(
+      90deg,
+      rgba(15, 13, 12, 0.94),
+      rgba(15, 13, 12, 0.68)
+    );
+  }
+}
+
+@media (max-width: 480px) {
+  .restaurant-breadcrumb {
+    height: 350px;
+    min-height: 350px;
+  }
+
+  .restaurant-breadcrumb-container {
+    padding: 0 20px;
+  }
+
+  .restaurant-breadcrumb-content h1 {
+    font-size: 33px;
+    letter-spacing: -1px;
+  }
+
+  .restaurant-breadcrumb-content p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .restaurant-breadcrumb-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .restaurant-breadcrumb-bg,
+  .restaurant-breadcrumb-content {
+    animation: none;
+  }
+}
